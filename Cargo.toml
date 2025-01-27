@@ -1,0 +1,18 @@
+[package]
+name = "rust-arduino-morse"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+description = "A Rust-based Arduino (ATmega328P) 'Hello World' Morse blink project."
+repository = "https://github.com/your-username/rust-arduino-morse"
+
+[dependencies]
+arduino-hal = "0.4"
+panic-halt = "0.2"
+
+[profile.release]
+lto = true
+opt-level = "s"
+debug = false
+strip = true
