@@ -12,8 +12,8 @@ Our `docs/` directory is divided into:
 ./docs
 ├── user_guide/
 ├── developer_guide/
-└── documentation/
-    └── README.md (this file)
+├── documentation/
+└── README.md (this file)
 ```
 
 ### 1.1 `user_guide/`
@@ -36,7 +36,7 @@ Our `docs/` directory is divided into:
   - Physical hardware data
   - Etc.
 
-### 1.3 `documentation/` (this folder)
+### 1.3 `documentation/`
 - **Purpose**: Define the project’s documentation standards, best practices, and processes. It includes guidelines on how all docs should be written, updated, and maintained.
 - **Examples**:
   - Documentation style guides (voice, tone, structure)
