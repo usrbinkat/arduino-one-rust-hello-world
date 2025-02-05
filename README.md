@@ -1,6 +1,6 @@
-# Rust Arduino “Hello World”
+# Rust Arduino "Hello World"
 
-This repository contains a minimal Rust application targeting the Arduino Uno (ATmega328P) that blinks an LED to spell out “HELLO WORLD” in Morse code. It can serve both as a **boilerplate** or **template** for experienced developers using [arduino-hal](https://github.com/Rahix/avr-hal/tree/main/arduino-hal) and an **educational resource** for students or self-taught learners exploring Rust in embedded systems.
+This repository contains a minimal Rust application targeting the Arduino Uno (ATmega328P) that blinks an LED to spell out "HELLO WORLD" in Morse code. It can serve both as a **boilerplate** or **template** for experienced developers using [arduino-hal](https://github.com/Rahix/avr-hal/tree/main/arduino-hal) and an **educational resource** for students or self-taught learners exploring Rust in embedded systems.
 
 ---
 
@@ -14,9 +14,10 @@ This repository contains a minimal Rust application targeting the Arduino Uno (A
 6. [Getting Started](#getting-started)
    - [1. Clone the Repository](#1-clone-the-repository)
    - [2. Install Rust AVR Toolchain](#2-install-rust-avr-toolchain)
-   - [3. Configure Cargo for AVR](#3-configure-cargo-for-avr)
-   - [4. Connect Your Arduino Uno](#4-connect-your-arduino-uno)
-   - [5. Build and Flash](#5-build-and-flash)
+   - [3. Install AVR Tools](#3-install-avr-tools)
+   - [4. Configure Cargo for AVR](#4-configure-cargo-for-avr)
+   - [5. Connect Your Arduino Uno](#5-connect-your-arduino-uno)
+   - [6. Build and Flash](#6-build-and-flash)
 7. [Usage & Customization](#usage--customization)
 8. [Troubleshooting](#troubleshooting)
 9. [Contributing](#contributing)
@@ -28,7 +29,7 @@ This repository contains a minimal Rust application targeting the Arduino Uno (A
 ## Overview
 
 - **What it Does**
-  This project demonstrates a simple “Hello World” by blinking the Arduino Uno’s onboard LED (pin 13) in Morse code. It’s an excellent starting point for beginners who want to explore Rust on microcontrollers, as well as a practical foundation for engineers adopting Rust for embedded projects.
+  This project demonstrates a simple "Hello World" by blinking the Arduino Uno's onboard LED (pin 13) in Morse code. It's an excellent starting point for beginners who want to explore Rust on microcontrollers, as well as a practical foundation for engineers adopting Rust for embedded projects.
 
 - **Why Rust?**
   Rust offers strong memory safety and high performance, making it well-suited for embedded development. With the [`arduino-hal`](https://crates.io/crates/arduino-hal) crate, you can write safe, high-level Rust code that compiles down to efficient AVR machine code.
@@ -37,7 +38,7 @@ This repository contains a minimal Rust application targeting the Arduino Uno (A
 
 ## Features
 
-- **Morse Code Blink**: Blinks the message “HELLO WORLD.”
+- **Morse Code Blink**: Blinks the message "HELLO WORLD."
 - **Boilerplate/Template Setup**: Demonstrates a basic Rust project structure targeting AVR.
 - **Easy/Configurable Toolchain**: Simplifies setup with a pre-configured `.cargo/config.toml`.
 - **Commented & Readable Source Code**: Teaches core concepts like timing, pin manipulation, and Morse encoding.
@@ -179,56 +180,85 @@ cd rust-arduino-morse
 
 ### 2. Install Rust AVR Toolchain
 
-Make sure you have `rustup` installed, then add the AVR target:
+1. Install Rust if you haven't already:
+   ```bash
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   ```
 
+2. Add the AVR target:
+   ```bash
+   rustup target add avr-atmega328p
+   ```
+
+3. Install nightly Rust (required for AVR support):
+   ```bash
+   rustup toolchain install nightly
+   rustup default nightly
+   ```
+
+### 3. Install AVR Tools
+
+**Linux**:
 ```bash
-rustup target add avr-atmega328p
+sudo apt-get update
+sudo apt-get install gcc-avr binutils-avr avr-libc avrdude
 ```
 
-**Platform-Specific AVR Tools**
-- **Linux**:
-  ```bash
-  sudo apt-get update
-  sudo apt-get install gcc-avr binutils-avr avr-libc
-  ```
-- **Mac**:
-  ```bash
-  brew tap osx-cross/avr
-  brew install avr-gcc
-  ```
-- **Windows**: Use [WinAVR](http://winavr.sourceforge.net/) or an alternative package.
-
-### 3. Configure Cargo for AVR
-
-In your `.cargo/config.toml`:
-
-```toml
-[build]
-target = "avr-atmega328p"
-
-[target.'cfg(target_arch = "avr")']
-runner = "avrdude -c arduino -p atmega328p -P /dev/ttyACM0 -b 115200 -D -U flash:w:target/avr-atmega328p/debug/rust-arduino-morse.elf"
-```
-
-- **`-P /dev/ttyACM0`**: Replace with your port (e.g., `COM3` on Windows).
-- **`-b 115200`**: Common baud rate for the Arduino Uno bootloader.
-
-### 4. Connect Your Arduino Uno
-
-1. Plug in your Arduino Uno via USB.
-2. Identify your device’s serial port, such as `/dev/ttyACM0`, `/dev/ttyUSB0`, or `COM3`.
-
-### 5. Build and Flash
-
+**Mac**:
 ```bash
-cargo build --release
-cargo run --release
+brew tap osx-cross/avr
+brew install avr-gcc avrdude
 ```
 
-- `cargo build --release`: Compiles the Rust code into an ELF file for the ATmega328P.
-- `cargo run --release`: Uploads the firmware to your Arduino via `avrdude` (the `runner` in `.cargo/config.toml`).
+**Windows**:
+1. Install [WinAVR](http://winavr.sourceforge.net/)
+2. Add WinAVR's bin directory to your PATH
 
-Upon flashing, the onboard LED should blink “HELLO WORLD” in Morse code.
+### 4. Configure Cargo for AVR
+
+1. Create or update `.cargo/config.toml`:
+   ```toml
+   [build]
+   target = "avr-atmega328p"
+
+   [target.'cfg(target_arch = "avr")']
+   runner = "avrdude -c arduino -p atmega328p -P /dev/ttyACM0 -b 115200 -D -U flash:w:target/avr-atmega328p/debug/rust-arduino-morse.elf"
+   ```
+
+2. Update the port (`-P` parameter) to match your system:
+   - Linux: `/dev/ttyACM0` or `/dev/ttyUSB0`
+   - Windows: `COM3` (check Device Manager)
+   - Mac: `/dev/cu.usbmodem*`
+
+### 5. Connect Your Arduino Uno
+
+1. Plug in your Arduino Uno via USB
+2. Ensure the Arduino IDE is closed (it can interfere with the port)
+3. Identify your device's serial port:
+   - Linux: `ls /dev/tty*`
+   - Windows: Check Device Manager
+   - Mac: `ls /dev/cu.*`
+
+### 6. Build and Flash
+
+1. Build the project:
+   ```bash
+   cargo build
+   ```
+
+2. Flash to your Arduino:
+   ```bash
+   cargo run
+   ```
+
+3. If flashing fails:
+   - Press the reset button on the Arduino just before running `cargo run`
+   - Double-check your port in `.cargo/config.toml`
+   - Ensure you have the correct permissions (Linux/Mac):
+     ```bash
+     sudo usermod -a -G dialout $USER
+     # Then log out and back in
+     ```
 
 ---
 
@@ -241,7 +271,7 @@ Upon flashing, the onboard LED should blink “HELLO WORLD” in Morse code.
    - In `main.rs`, you can adjust the dot/dash duration or switch to a different LED pin for custom hardware setups.
 
 3. **Debugging with Serial**
-   - You can enable serial debugging via `arduino-hal`, though the AVR’s resources are limited. See the [arduino-hal documentation](https://docs.rs/arduino-hal/latest/arduino_hal/) for details.
+   - You can enable serial debugging via `arduino-hal`, though the AVR's resources are limited. See the [arduino-hal documentation](https://docs.rs/arduino-hal/latest/arduino_hal/) for details.
 
 4. **Other Arduino Boards**
    - If you use a different variant (Leonardo, Mega, etc.), update the `-p` parameter in your `.cargo/config.toml` and any bootloader settings accordingly.
@@ -262,7 +292,7 @@ Upon flashing, the onboard LED should blink “HELLO WORLD” in Morse code.
 
 3. **Flashing Failure**
    - Confirm the correct baud rate (`-b 115200`).
-   - Press the reset button on the Arduino just before running `cargo run --release` if you have bootloader timing issues.
+   - Press the reset button on the Arduino just before running `cargo run` if you have bootloader timing issues.
 
 4. **Compiler/Crate Updates**
    - If dependencies are out of date, run:
@@ -295,7 +325,7 @@ Contributions are welcome! To contribute:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE). You’re free to use, modify, and distribute this code as long as you retain the original license.
+This project is licensed under the [MIT License](LICENSE). You're free to use, modify, and distribute this code as long as you retain the original license.
 
 ---
 

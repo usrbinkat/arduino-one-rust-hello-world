@@ -1,0 +1,8 @@
+{
+    "search.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/.gitkeep": true,
+        "**/.gitignore": true,
+    }
+}

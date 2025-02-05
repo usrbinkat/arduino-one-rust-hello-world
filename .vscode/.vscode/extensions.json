@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "stateful.runme",
+        "oderwat.indent-rainbow",
+        "ms-vscode-remote.remote-containers"
+    ]
+}
