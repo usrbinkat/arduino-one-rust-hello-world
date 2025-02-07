@@ -1,5 +1,8 @@
 [build]
-target = "avr-unknown-gnu-atmega328"
+target = "avr-specs/avr-atmega328p.json"
 
 [target.'cfg(target_arch = "avr")']
-runner = "avrdude -c arduino -p atmega328p -P /dev/ttyACM0 -b 115200 -D -U flash:w:target/avr-unknown-gnu-atmega328/debug/rust-arduino-morse.elf"
+runner = "ravedude uno"
+
+[unstable]
+build-std = ["core"]

@@ -1,18 +1,30 @@
 [package]
-name = "rust-arduino-morse"
+name = "rust-iot-light"
 version = "0.1.0"
+authors = ["Your Name <your.email@example.com>"]
 edition = "2021"
-authors = ["Your Name <you@example.com>"]
-license = "MIT"
-description = "A Rust-based Arduino (ATmega328P) 'Hello World' Morse blink project."
-repository = "https://github.com/your-username/rust-arduino-morse"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
-arduino-hal = "0.4"
-panic-halt = "0.2"
+panic-halt = "0.2.0"
+ufmt = "0.2.0"
+nb = "1.1.0"
+embedded-hal = "1.0"
 
-[profile.release]
+[dependencies.arduino-hal]
+git = "https://github.com/rahix/avr-hal"
+rev = "d1782c69236dcd4cb73dd1d7c414136cced86091"
+features = ["arduino-uno"]
+
+# Configure the build for minimal size - AVRs have very limited resources
+[profile.dev]
+panic = "abort"
 lto = true
 opt-level = "s"
-debug = false
-strip = true
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+debug = true
+lto = true
+opt-level = "s"

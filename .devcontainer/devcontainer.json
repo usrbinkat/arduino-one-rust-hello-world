@@ -1,9 +1,10 @@
 {
-    "name": "veilid",
+    "name": "brightidea",
     "dockerFile": "Dockerfile",
     "overrideCommand": false,
     "updateRemoteUserUID": true,
-    "remoteUser": "vscode",
+    "remoteUser": "ubuntu",
+    "containerUser": "ubuntu",
     "securityOpt": [
         "seccomp=unconfined"
     ],
@@ -18,7 +19,7 @@
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
     },
-    "postCreateCommand": "cargo --version",
+    "postCreateCommand": "sudo chown -R ubuntu:ubuntu /workspaces/",
     "shutdownAction": "stopContainer",
     "customizations": {
         "vscode": {

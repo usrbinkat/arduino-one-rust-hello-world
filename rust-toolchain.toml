@@ -1,0 +1,17 @@
+[toolchain]
+# Using the latest nightly for AVR support
+channel = "nightly-2024-02-04"
+
+# Components needed for AVR development
+components = [
+    "rust-src",           # Required for core library customization
+    "rustfmt",           # For code formatting
+    "clippy",            # For additional linting
+]
+
+# The AVR target for Arduino Uno
+targets = ["avr-unknown-gnu-atmega328"]
+
+# Using minimal profile since we're doing embedded development
+# and don't need the full toolchain
+profile = "minimal"
