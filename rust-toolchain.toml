@@ -1,14 +1,4 @@
 [toolchain]
-
-# Latest nightly for AVR support
-channel = "nightly"
-
-# Components for AVR development
-components = [
-    "rust-src",          # Required for core library customization
-    "rustfmt",           # For code formatting
-    "clippy",            # For additional linting
-]
-
-# Minimal profile since we're doing embedded development
+channel = "nightly-2024-03-22"
+components = ["rust-src"]
 profile = "minimal"

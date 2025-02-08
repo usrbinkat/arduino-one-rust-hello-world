@@ -1,9 +1,14 @@
 [package]
-name = "rust-iot-light"
+name = "brightidea"
 version = "0.1.0"
-authors = ["Your Name <your.email@example.com>"]
+authors = ["usrbinkat <usrbinkat@braincraft.io>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
+
+[[bin]]
+name = "brightidea"
+test = false
+bench = false
 
 [dependencies]
 panic-halt = "0.2.0"
@@ -13,10 +18,16 @@ embedded-hal = "1.0"
 
 [dependencies.arduino-hal]
 git = "https://github.com/rahix/avr-hal"
-rev = "d1782c69236dcd4cb73dd1d7c414136cced86091"
+rev = "3c089795cadbbc7fa83f45958128689fee7ba1e4"
 features = ["arduino-uno"]
 
-# Configure the build for minimal size - AVRs have very limited resources
+# The latest releases of `proc-macro2` do not support the rust toolchain that
+# we use.  Thus, we must fix this dependency to an older version where our
+# toolchain is still supported.  See https://github.com/Rahix/avr-hal/issues/537
+[build-dependencies.proc-macro2]
+version = "=1.0.79"
+
+# Configure the build for minimal size - AVRs have very little program memory
 [profile.dev]
 panic = "abort"
 lto = true
