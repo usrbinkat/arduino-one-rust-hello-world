@@ -43,37 +43,35 @@ RUN set ${BASH_FLAGS} \
 # Ensure workspace directory exists with correct permissions
 RUN mkdir -p /workspaces && chown ubuntu:ubuntu /workspaces
 
+# Install GitHub CLI
+RUN set ${BASH_FLAGS} \
+    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+       | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y gh \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && echo
+
 # Switch to ubuntu user for Rust installation
 USER ubuntu
 WORKDIR /home/ubuntu
 
-# Add cargo binaries to PATH
+# Install Rust and Cargo tools
 ENV PATH="/home/ubuntu/.cargo/bin:${PATH}"
-
-# Install Rust using rustup and required cargo tools
 RUN set ${BASH_FLAGS} \
     && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- \
         --default-toolchain nightly \
-        --profile default \
-        --component rust-src \
+        --profile minimal \
         -y \
+    && . "$HOME/.cargo/env" \
     && cargo install cargo-generate \
     && cargo install ravedude \
     && echo
 
-# Install GitHub CLI
-USER root
-RUN set ${BASH_FLAGS} \
-    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && apt-get update \
-    && apt-get install -y gh \
-    && rm -rf /var/lib/apt/lists/* \
-    && echo
-
-# Switch back to ubuntu user
-USER ubuntu
+# Set final working directory
 WORKDIR /workspaces
 
 EXPOSE 5150

@@ -19,7 +19,7 @@
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
     },
-    "postCreateCommand": "sudo chown -R ubuntu:ubuntu /workspaces/",
+    "postCreateCommand": "sudo chown -R ubuntu:ubuntu /workspaces/ ; ./hack/dev/install-rust.sh",
     "shutdownAction": "stopContainer",
     "customizations": {
         "vscode": {
